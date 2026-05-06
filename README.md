@@ -14,7 +14,7 @@ API
   -> DB: store job state
   -> Queue: enqueue optimization job
 Worker
-  -> Queue: claim job
+  -> Queue: claim job when capacity is available
   -> COS: download source model
   -> 3D-Model-Optimizer: optimize model
   -> COS: upload optimized GLB
@@ -43,6 +43,7 @@ This is the initial platform scaffold. The first production milestone should add
 - queue producer and worker consumer
 - COS signed upload/download integration
 - optimizer call wrapper
+- queue backpressure when every optimization worker is busy
 - retry and dead-letter handling
 
 ## Local Scaffold Check
