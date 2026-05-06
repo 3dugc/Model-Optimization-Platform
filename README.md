@@ -4,6 +4,8 @@ Queue-driven platform layer for 3D model optimization.
 
 This repository owns the service orchestration around [3D-Model-Optimizer](https://github.com/3dugc/3D-Model-Optimizer): upload flow, job state, queue dispatch, COS result storage, worker scaling, and API boundaries. The optimizer remains a separate processing engine.
 
+The platform should also leave room for future model-processing pipelines, including [Area-Target-Scanner](https://github.com/3dugc/Area-Target-Scanner), whose processing pipeline turns LiDAR scan exports into Unity-ready area target asset bundles.
+
 ## Architecture
 
 ```text
@@ -45,6 +47,7 @@ This is the initial platform scaffold. The first production milestone should add
 - optimizer call wrapper
 - queue backpressure when every optimization worker is busy
 - retry and dead-letter handling
+- future pipeline routing for Area-Target-Scanner-style asset bundle jobs
 
 ## Local Scaffold Check
 

@@ -8,6 +8,8 @@ Build an asynchronous 3D model optimization platform where clients upload source
 
 3D-Model-Optimizer should stay focused on model conversion and optimization. This platform owns job orchestration, user-facing APIs, queue semantics, object storage keys, retries, and operational scaling.
 
+Other processing engines may be integrated later. Area-Target-Scanner is reserved as a future pipeline because it accepts iOS LiDAR scan exports and produces Unity area target asset bundles containing an optimized model, texture assets, feature database, and manifest.
+
 ## Data Flow
 
 1. The frontend asks the API to create an optimization job.
@@ -49,3 +51,14 @@ All optimization servers may be occupied at the same time. The platform must tre
 ## MVP Integration Choice
 
 The MVP should call the existing 3D-Model-Optimizer HTTP API from the worker. A later phase can add a CLI or direct library entrypoint if HTTP overhead, timeout behavior, or progress reporting becomes limiting.
+
+## Future Pipeline Integrations
+
+The job model should not assume every task is a single model-to-GLB optimization. Future jobs should carry a pipeline identifier so the API and workers can route work to different processors.
+
+Initial reserved pipeline identifiers:
+
+- `model-optimization`: source model or archive to optimized GLB through 3D-Model-Optimizer.
+- `area-target-processing`: iOS LiDAR scan ZIP to area target asset bundle through Area-Target-Scanner.
+
+Area target processing should use the same platform primitives: direct COS upload, durable job state, queue backpressure, worker capacity limits, retries, and COS result storage. Its result artifact is an asset bundle directory or archive rather than only `optimized.glb`.
