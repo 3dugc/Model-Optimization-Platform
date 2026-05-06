@@ -42,6 +42,7 @@ docs/        Architecture and implementation notes
 - [Architecture](docs/architecture.md)
 - [Deployment Guide](docs/deployment.md)
 - [部署说明（中文）](docs/deployment.zh-CN.md)
+- [MySQL + Redis 任务系统设计](docs/mysql-redis-job-queue.zh-CN.md)
 - [Composite Worker Node Design](docs/superpowers/specs/2026-05-07-composite-worker-node-design.md)
 
 ## Current Status

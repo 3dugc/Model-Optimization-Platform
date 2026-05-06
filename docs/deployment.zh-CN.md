@@ -1,12 +1,12 @@
 # 部署说明
 
-本文说明平台、弹性工作服务器、3D-Model-Optimizer 和 Area-Target-Scanner 应该如何部署在一起。
+本文说明平台、MySQL、Redis、弹性工作服务器、3D-Model-Optimizer 和 Area-Target-Scanner 应该如何部署在一起。
 
 ## 部署目标
 
 平台分成两层：
 
-- 控制层：对外 API、任务数据库、队列、COS 存储桶，以及前端查询任务状态所需的接口。
+- 控制层：对外 API、MySQL 任务数据库、Redis 队列、COS 存储桶，以及前端查询任务状态所需的接口。
 - 处理层：弹性的复合工作节点。每个节点都可以处理 `model-optimization` 和 `area-target-processing` 两类任务。
 
 队列就是负载均衡器。如果所有工作节点都在忙，任务继续停留在队列中，直到有节点释放处理能力。
@@ -18,8 +18,8 @@ flowchart TB
   Frontend["前端"]
   ApiLb["API 负载均衡"]
   Api["平台 API<br/>apps/api"]
-  Db["任务数据库"]
-  Queue["任务队列"]
+  Db["MySQL<br/>任务数据库"]
+  Queue["Redis + BullMQ<br/>任务队列"]
   Cos["COS 存储桶<br/>uploads/ 和 results/"]
 
   subgraph Asg["弹性工作服务器组"]
@@ -170,14 +170,15 @@ docker compose -f infra/docker-compose.yml up --build
 | API | `http://localhost:8080/health` | scaffold 健康检查。 |
 | 3D-Model-Optimizer | `http://localhost:3000` | 本地开发用优化器 sidecar。 |
 | Redis | `localhost:6379` | 队列占位。 |
+| MySQL | `localhost:3306` | 任务事实表和状态存储。 |
 | MinIO API | `http://localhost:9000` | COS 兼容的本地对象存储。 |
 | MinIO Console | `http://localhost:9001` | 本地对象存储管理界面。 |
 
 ## 生产部署顺序
 
 1. 创建 COS 存储桶，并确定对象 key 规范。
-2. 部署任务数据库。
-3. 部署支持可见性超时或租约机制的队列服务。
+2. 部署 MySQL 任务数据库。
+3. 部署 Redis + BullMQ 队列服务。
 4. 将 Platform API 部署到公网或内网负载均衡后面。
 5. 构建弹性工作服务器镜像或启动模板。
 6. 每台工作服务器运行 worker agent、Area-Target-Scanner、3D-Model-Optimizer 和本地临时卷。

@@ -1,12 +1,12 @@
 # Deployment Guide
 
-This document explains how the platform, elastic worker servers, 3D-Model-Optimizer, and Area-Target-Scanner should be deployed together.
+This document explains how the platform, MySQL, Redis, elastic worker servers, 3D-Model-Optimizer, and Area-Target-Scanner should be deployed together.
 
 ## Deployment Goal
 
 The platform is split into two layers:
 
-- Control plane: public API, job database, queue, COS bucket, and frontend-facing status endpoints.
+- Control plane: public API, MySQL job database, Redis queue, COS bucket, and frontend-facing status endpoints.
 - Processing plane: elastic composite worker nodes. Each node can process both `model-optimization` and `area-target-processing` jobs.
 
 The queue is the load balancer. If all worker nodes are busy, jobs remain queued until a node has capacity.
@@ -18,8 +18,8 @@ flowchart TB
   Frontend["Frontend"]
   ApiLb["API Load Balancer"]
   Api["Platform API<br/>apps/api"]
-  Db["Job Database"]
-  Queue["Job Queue"]
+  Db["MySQL<br/>Job Database"]
+  Queue["Redis + BullMQ<br/>Job Queue"]
   Cos["COS Bucket<br/>uploads/ and results/"]
 
   subgraph Asg["Elastic Worker Server Group"]
@@ -170,14 +170,15 @@ Local service map:
 | API | `http://localhost:8080/health` | Scaffold health check. |
 | 3D-Model-Optimizer | `http://localhost:3000` | Optimizer sidecar for local development. |
 | Redis | `localhost:6379` | Queue placeholder. |
+| MySQL | `localhost:3306` | Durable job state and result metadata. |
 | MinIO API | `http://localhost:9000` | COS-compatible local object storage. |
 | MinIO Console | `http://localhost:9001` | Local object storage admin UI. |
 
 ## Production Deployment Order
 
 1. Create COS buckets and object key conventions.
-2. Deploy the job database.
-3. Deploy the queue service with visibility timeout or lease support.
+2. Deploy the MySQL job database.
+3. Deploy Redis + BullMQ queue workers with lock and retry support.
 4. Deploy the Platform API behind a public or private load balancer.
 5. Build the elastic worker server image or launch template.
 6. On each worker server, run the worker agent, Area-Target-Scanner, 3D-Model-Optimizer, and a local temp volume.

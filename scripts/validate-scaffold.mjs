@@ -7,6 +7,8 @@ const requiredFiles = [
   'docs/architecture.md',
   'docs/deployment.md',
   'docs/deployment.zh-CN.md',
+  'docs/mysql-redis-job-queue.zh-CN.md',
+  'docs/superpowers/plans/2026-05-07-mysql-redis-job-queue-implementation.md',
   'docs/superpowers/plans/2026-05-07-initial-platform-scaffold.md',
   'apps/api/package.json',
   'apps/api/src/index.mjs',
