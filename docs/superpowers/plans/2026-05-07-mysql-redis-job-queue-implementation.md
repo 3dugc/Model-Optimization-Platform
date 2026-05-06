@@ -571,7 +571,7 @@ git commit -m "feat: add mysql job repository"
 - Create: `apps/api/src/queue/job-queue.test.mjs`
 - Modify: `apps/api/package.json`
 
-- [ ] **Step 1: Install queue dependencies**
+- [x] **Step 1: Install queue dependencies**
 
 Run:
 
@@ -581,7 +581,7 @@ npm --workspace apps/api install bullmq ioredis
 
 Expected: `apps/api/package.json` includes `bullmq` and `ioredis`.
 
-- [ ] **Step 2: Add queue unit test**
+- [x] **Step 2: Add queue unit test**
 
 Create `apps/api/src/queue/job-queue.test.mjs`:
 
@@ -604,7 +604,7 @@ test('buildJobQueueMessage stores only routing data', () => {
 });
 ```
 
-- [ ] **Step 3: Implement BullMQ producer**
+- [x] **Step 3: Implement BullMQ producer**
 
 Create `apps/api/src/queue/job-queue.mjs`:
 
@@ -651,7 +651,7 @@ export function createJobQueue({ connection }) {
 }
 ```
 
-- [ ] **Step 4: Run queue unit test**
+- [x] **Step 4: Run queue unit test**
 
 Run:
 
@@ -661,7 +661,7 @@ npm --workspace apps/api test
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
