@@ -181,7 +181,7 @@ git commit -m "feat: add shared job model"
 - Modify: `infra/docker-compose.yml`
 - Modify: `scripts/validate-scaffold.mjs`
 
-- [ ] **Step 1: Add the migration SQL**
+- [x] **Step 1: Add the migration SQL**
 
 Create `apps/api/src/db/migrations/001_create_jobs.sql`:
 
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS job_events (
 );
 ```
 
-- [ ] **Step 2: Add MySQL environment examples**
+- [x] **Step 2: Add MySQL environment examples**
 
 Add to `.env.example`:
 
@@ -236,7 +236,7 @@ MYSQL_PASSWORD=model_platform
 MYSQL_ROOT_PASSWORD=model_platform_root
 ```
 
-- [ ] **Step 3: Add MySQL to local compose**
+- [x] **Step 3: Add MySQL to local compose**
 
 Add this service to `infra/docker-compose.yml`:
 
@@ -270,7 +270,7 @@ Add `DATABASE_URL` to the `api` and `worker` environment sections:
 
 Add `mysql` to the `depends_on` list for `api` and `worker`.
 
-- [ ] **Step 4: Add schema file to scaffold validation**
+- [x] **Step 4: Add schema file to scaffold validation**
 
 Add this path to `requiredFiles` in `scripts/validate-scaffold.mjs`:
 
@@ -278,7 +278,7 @@ Add this path to `requiredFiles` in `scripts/validate-scaffold.mjs`:
 'apps/api/src/db/migrations/001_create_jobs.sql',
 ```
 
-- [ ] **Step 5: Verify compose starts MySQL**
+- [x] **Step 5: Verify compose starts MySQL**
 
 Run:
 
@@ -294,7 +294,9 @@ jobs
 job_events
 ```
 
-- [ ] **Step 6: Commit**
+Local verification note: ran with `MYSQL_HOST_PORT=3310` because another local Docker stack already occupied host port `3306`; the compose default remains `3306`.
+
+- [x] **Step 6: Commit**
 
 Run:
 

@@ -10,6 +10,7 @@ const requiredFiles = [
   'docs/mysql-redis-job-queue.zh-CN.md',
   'docs/superpowers/plans/2026-05-07-mysql-redis-job-queue-implementation.md',
   'docs/superpowers/plans/2026-05-07-initial-platform-scaffold.md',
+  'apps/api/src/db/migrations/001_create_jobs.sql',
   'apps/api/package.json',
   'apps/api/src/index.mjs',
   'apps/api/Dockerfile',
