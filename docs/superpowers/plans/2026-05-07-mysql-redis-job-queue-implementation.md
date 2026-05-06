@@ -983,7 +983,7 @@ git commit -m "feat: add redis worker consumer"
 - Create: `scripts/smoke-mysql-redis-job.mjs`
 - Modify: `package.json`
 
-- [ ] **Step 1: Add smoke script**
+- [x] **Step 1: Add smoke script**
 
 Create `scripts/smoke-mysql-redis-job.mjs`:
 
@@ -1053,7 +1053,7 @@ console.log(JSON.stringify({
 }));
 ```
 
-- [ ] **Step 2: Add npm script**
+- [x] **Step 2: Add npm script**
 
 Modify root `package.json`:
 
@@ -1061,7 +1061,7 @@ Modify root `package.json`:
 "smoke:mysql-redis": "node scripts/smoke-mysql-redis-job.mjs"
 ```
 
-- [ ] **Step 3: Run local stack**
+- [x] **Step 3: Run local stack**
 
 Run:
 
@@ -1083,7 +1083,9 @@ Expected output:
 
 When the worker placeholder pipeline is active, status may become `completed`.
 
-- [ ] **Step 4: Commit**
+Local verification note: ran detached with `API_HOST_PORT=8085`, `REDIS_HOST_PORT=6381`, and `MYSQL_HOST_PORT=3310` because this machine has other local Docker stacks on the default ports. The default optimizer image returned GHCR unauthorized, so smoke verification used `OPTIMIZER_IMAGE=nginx:alpine`; the deterministic worker wrapper does not call the optimizer service in this task. Smoke returned `queued`, and a follow-up status query showed the worker completed the job with `attempts=1`.
+
+- [x] **Step 4: Commit**
 
 Run:
 

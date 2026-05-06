@@ -11,6 +11,7 @@
     "dev:api": "npm --workspace apps/api run dev",
     "dev:worker": "npm --workspace apps/worker run dev",
     "lint": "node scripts/validate-scaffold.mjs",
+    "smoke:mysql-redis": "node scripts/smoke-mysql-redis-job.mjs",
     "test": "node scripts/validate-scaffold.mjs"
   },
   "engines": {
