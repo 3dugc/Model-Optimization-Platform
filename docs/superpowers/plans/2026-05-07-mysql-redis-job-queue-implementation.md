@@ -40,7 +40,7 @@
 - Modify: `packages/shared/src/index.mjs`
 - Modify: `packages/shared/package.json`
 
-- [ ] **Step 1: Add the shared job model test**
+- [x] **Step 1: Add the shared job model test**
 
 Create `packages/shared/src/job-model.test.mjs`:
 
@@ -81,7 +81,7 @@ test('shared constants expose expected values', () => {
 });
 ```
 
-- [ ] **Step 2: Run the failing test**
+- [x] **Step 2: Run the failing test**
 
 Run:
 
@@ -91,7 +91,7 @@ node --test packages/shared/src/job-model.test.mjs
 
 Expected: FAIL because `packages/shared/src/job-model.mjs` does not exist yet.
 
-- [ ] **Step 3: Implement the shared job model**
+- [x] **Step 3: Implement the shared job model**
 
 Create `packages/shared/src/job-model.mjs`:
 
@@ -154,7 +154,7 @@ Modify `packages/shared/package.json` scripts:
 }
 ```
 
-- [ ] **Step 4: Run the passing test**
+- [x] **Step 4: Run the passing test**
 
 Run:
 
@@ -164,7 +164,7 @@ npm --workspace packages/shared test
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
