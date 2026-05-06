@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+.env
+.env.local
+dist/
+coverage/
+temp/
+tmp/
+uploads/
+results/
+*.log

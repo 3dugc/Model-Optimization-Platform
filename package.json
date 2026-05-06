@@ -1,0 +1,19 @@
+{
+  "name": "@3dugc/model-optimization-platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace apps/api run dev",
+    "dev:worker": "npm --workspace apps/worker run dev",
+    "lint": "node scripts/validate-scaffold.mjs",
+    "test": "node scripts/validate-scaffold.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
