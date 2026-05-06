@@ -9,5 +9,10 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "bullmq": "^5.76.6",
+    "ioredis": "^5.10.1",
+    "mysql2": "^3.22.3"
   }
 }

@@ -808,7 +808,7 @@ git commit -m "feat: add job api routes"
 - Modify: `apps/worker/src/index.mjs`
 - Modify: `apps/worker/package.json`
 
-- [ ] **Step 1: Install worker dependencies**
+- [x] **Step 1: Install worker dependencies**
 
 Run:
 
@@ -818,7 +818,7 @@ npm --workspace apps/worker install bullmq ioredis mysql2
 
 Expected: `apps/worker/package.json` includes `bullmq`, `ioredis`, and `mysql2`.
 
-- [ ] **Step 2: Add model optimization pipeline wrapper**
+- [x] **Step 2: Add model optimization pipeline wrapper**
 
 Create `apps/worker/src/pipelines/model-optimization.mjs`:
 
@@ -841,7 +841,7 @@ export async function runModelOptimizationJob({ job, optimizerUrl, tempDir }) {
 
 This is a deterministic wrapper contract. The next pipeline task can replace the body with COS download, HTTP upload to 3D-Model-Optimizer, and COS result upload.
 
-- [ ] **Step 3: Add worker config**
+- [x] **Step 3: Add worker config**
 
 Create `apps/worker/src/config.mjs`:
 
@@ -858,7 +858,7 @@ export function readWorkerConfig(env = process.env) {
 }
 ```
 
-- [ ] **Step 4: Implement worker queue**
+- [x] **Step 4: Implement worker queue**
 
 Create `apps/worker/src/queue/worker-queue.mjs`:
 
@@ -882,7 +882,7 @@ export function createWorkerQueue({ connection, concurrency, processor }) {
 }
 ```
 
-- [ ] **Step 5: Implement worker startup**
+- [x] **Step 5: Implement worker startup**
 
 Modify `apps/worker/src/index.mjs`:
 
@@ -957,7 +957,7 @@ worker.on('failed', (job, error) => {
 
 Also create `apps/worker/src/db/mysql.mjs` and `apps/worker/src/jobs/job-repository.mjs` by reusing the API pool/repository implementation. Keep worker-side repository focused on `getJob`, `claimJob`, `markCompleted`, and `markFailed`.
 
-- [ ] **Step 6: Run worker syntax checks**
+- [x] **Step 6: Run worker syntax checks**
 
 Run:
 
@@ -968,7 +968,7 @@ npm test
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 Run:
 
