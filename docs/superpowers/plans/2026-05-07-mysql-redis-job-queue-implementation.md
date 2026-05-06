@@ -314,7 +314,7 @@ git commit -m "feat: add mysql job schema"
 - Create: `apps/api/src/jobs/job-repository.test.mjs`
 - Modify: `apps/api/package.json`
 
-- [ ] **Step 1: Install API dependencies**
+- [x] **Step 1: Install API dependencies**
 
 Run:
 
@@ -324,7 +324,7 @@ npm --workspace apps/api install mysql2
 
 Expected: `apps/api/package.json` includes `mysql2`.
 
-- [ ] **Step 2: Add repository integration test**
+- [x] **Step 2: Add repository integration test**
 
 Create `apps/api/src/jobs/job-repository.test.mjs`:
 
@@ -381,7 +381,7 @@ test('job repository creates and transitions a job', async (t) => {
 });
 ```
 
-- [ ] **Step 3: Add config and MySQL pool**
+- [x] **Step 3: Add config and MySQL pool**
 
 Create `apps/api/src/config.mjs`:
 
@@ -411,7 +411,7 @@ export function createMySqlPool(databaseUrl) {
 }
 ```
 
-- [ ] **Step 4: Implement job repository**
+- [x] **Step 4: Implement job repository**
 
 Create `apps/api/src/jobs/job-repository.mjs`:
 
@@ -531,7 +531,7 @@ function mapJob(row) {
 }
 ```
 
-- [ ] **Step 5: Add API test script**
+- [x] **Step 5: Add API test script**
 
 Modify `apps/api/package.json`:
 
@@ -543,7 +543,7 @@ Modify `apps/api/package.json`:
 }
 ```
 
-- [ ] **Step 6: Run repository test**
+- [x] **Step 6: Run repository test**
 
 Run:
 
@@ -553,7 +553,9 @@ DATABASE_URL=mysql://model_platform:model_platform@127.0.0.1:3306/model_optimiza
 
 Expected: PASS when local MySQL from Docker Compose is running.
 
-- [ ] **Step 7: Commit**
+Local verification note: ran against `127.0.0.1:3310` because host `3306` is occupied by another local Docker stack.
+
+- [x] **Step 7: Commit**
 
 Run:
 
