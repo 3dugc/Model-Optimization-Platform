@@ -143,14 +143,14 @@ sequenceDiagram
 
 ## 当前仓库可以部署什么
 
-当前仓库还是 scaffold，不是完整生产实现。
+当前仓库已经包含第一版 MySQL + Redis/BullMQ 任务主链路。COS 签名和真实 3D-Model-Optimizer 调用仍是占位实现，但任务创建、上传完成入队、worker 领取、MySQL 状态更新和本地 smoke 验证已经可以跑通。
 
 | 路径 | 当前作用 |
 | --- | --- |
-| `apps/api` | API 占位服务，提供 `GET /health`，并为未来任务接口返回占位响应。 |
-| `apps/worker` | Worker 占位进程，读取运行配置并保持运行。 |
+| `apps/api` | API 服务，提供 `GET /health`、`POST /v1/jobs`、`POST /v1/jobs/{jobId}/complete-upload`、`GET /v1/jobs/{jobId}` 和 `GET /v1/jobs/{jobId}/result-url`。 |
+| `apps/worker` | BullMQ worker，消费 `model-processing-jobs` 队列，从 MySQL 读取 job、条件领取并运行 deterministic model optimization wrapper。 |
 | `packages/shared` | 共享任务状态和 pipeline 常量。 |
-| `infra/docker-compose.yml` | 本地开发示例，包含 API、worker、Redis、MinIO 和 3D-Model-Optimizer。 |
+| `infra/docker-compose.yml` | 本地开发示例，包含 API、worker、MySQL、Redis、MinIO 和 3D-Model-Optimizer。 |
 | `docs/architecture.md` | 产品架构和复合工作节点模型。 |
 
 Area-Target-Scanner 已在架构中预留，但还没有接入 `infra/docker-compose.yml`。
@@ -167,12 +167,27 @@ docker compose -f infra/docker-compose.yml up --build
 
 | 服务 | URL | 说明 |
 | --- | --- | --- |
-| API | `http://localhost:8080/health` | scaffold 健康检查。 |
+| API | `http://localhost:8080/health` | API 健康检查和任务接口。 |
 | 3D-Model-Optimizer | `http://localhost:3000` | 本地开发用优化器 sidecar。 |
-| Redis | `localhost:6379` | 队列占位。 |
+| Redis | `localhost:6379` | BullMQ 队列。 |
 | MySQL | `localhost:3306` | 任务事实表和状态存储。 |
 | MinIO API | `http://localhost:9000` | COS 兼容的本地对象存储。 |
 | MinIO Console | `http://localhost:9001` | 本地对象存储管理界面。 |
+
+如果本机已有服务占用默认端口，可以覆盖 host 端口，不影响容器内部连接：
+
+```bash
+API_HOST_PORT=8085 REDIS_HOST_PORT=6381 MYSQL_HOST_PORT=3310 \
+docker compose -f infra/docker-compose.yml up --build
+```
+
+本地 smoke 验证：
+
+```bash
+API_HOST_PORT=8085 npm run smoke:mysql-redis
+```
+
+第一版 worker wrapper 会写入确定性的 `results/{jobId}/optimized.glb`，真实 COS 下载、优化器调用和结果上传由后续 pipeline 任务替换。
 
 ## 生产部署顺序
 
@@ -202,6 +217,7 @@ Platform API：
 
 ```text
 API_PORT=8080
+API_HOST_PORT=8080
 QUEUE_URL=...
 DATABASE_URL=...
 COS_BUCKET=...
@@ -215,12 +231,14 @@ Worker 节点：
 ```text
 WORKER_CONCURRENCY=1
 QUEUE_URL=...
+REDIS_HOST_PORT=6379
 DATABASE_URL=...
 COS_BUCKET=...
 COS_REGION=...
 COS_SECRET_ID=...
 COS_SECRET_KEY=...
 OPTIMIZER_URL=http://optimizer:3000
+OPTIMIZER_HOST_PORT=3000
 AREA_TARGET_SCANNER_URL=http://area-target-scanner:8080
 WORKER_TEMP_DIR=/work/temp
 ```

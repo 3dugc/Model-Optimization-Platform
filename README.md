@@ -47,28 +47,37 @@ docs/        Architecture and implementation notes
 
 ## Current Status
 
-This is the initial platform scaffold. The first production milestone should add:
+The first MySQL + Redis/BullMQ production job-system milestone is implemented. It includes:
 
-- persistent job storage
-- queue producer and worker consumer
-- COS signed upload/download integration
-- optimizer call wrapper
-- queue backpressure when every optimization worker is busy
-- composite worker nodes running worker agent, Area-Target-Scanner, and 3D-Model-Optimizer together
-- retry and dead-letter handling
-- future pipeline routing for Area-Target-Scanner-style asset bundle jobs
+- MySQL job and job event schema
+- API job repository and BullMQ producer
+- `POST /v1/jobs`, `POST /v1/jobs/:jobId/complete-upload`, `GET /v1/jobs/:jobId`, and `GET /v1/jobs/:jobId/result-url`
+- worker BullMQ consumer with conditional MySQL claim/update behavior
+- deterministic `model-optimization` wrapper that writes `results/{jobId}/optimized.glb`
+- docker compose wiring for MySQL, Redis, API, worker, MinIO, and optimizer sidecar
 
-## Local Scaffold Check
+Still pending: real COS signed URL integration, actual optimizer HTTP/COS pipeline body, Area-Target-Scanner routing, and production-grade retry/dead-letter handling.
+
+## Local Checks
 
 ```bash
 npm test
+npm --workspace packages/shared test
+npm --workspace apps/api test
 ```
 
-## Run Placeholders
+## Local Smoke
 
 ```bash
-npm run dev:api
-npm run dev:worker
+docker compose -f infra/docker-compose.yml up --build
+npm run smoke:mysql-redis
 ```
 
-The API placeholder exposes `GET /health`. The worker placeholder prints its runtime configuration and stays alive.
+If default local ports are already occupied, override host ports while keeping container-internal service URLs unchanged:
+
+```bash
+API_HOST_PORT=8085 REDIS_HOST_PORT=6381 MYSQL_HOST_PORT=3310 \
+docker compose -f infra/docker-compose.yml up --build
+
+API_HOST_PORT=8085 npm run smoke:mysql-redis
+```

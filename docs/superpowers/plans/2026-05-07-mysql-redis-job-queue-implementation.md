@@ -1101,7 +1101,7 @@ git commit -m "test: add mysql redis smoke test"
 - Modify: `docs/deployment.zh-CN.md`
 - Modify: `README.md`
 
-- [ ] **Step 1: Verify deployment documentation**
+- [x] **Step 1: Verify deployment documentation**
 
 Confirm `docs/deployment.zh-CN.md` production topology and local service map mention MySQL and Redis/BullMQ. The service map should include:
 
@@ -1109,7 +1109,7 @@ Confirm `docs/deployment.zh-CN.md` production topology and local service map men
 | MySQL | `localhost:3306` | 任务事实表和状态存储。 |
 ```
 
-- [ ] **Step 2: Verify the MySQL Redis design link**
+- [x] **Step 2: Verify the MySQL Redis design link**
 
 Confirm README documentation list includes:
 
@@ -1117,7 +1117,7 @@ Confirm README documentation list includes:
 - [MySQL + Redis 任务系统设计](docs/mysql-redis-job-queue.zh-CN.md)
 ```
 
-- [ ] **Step 3: Run validation**
+- [x] **Step 3: Run validation**
 
 Run:
 
@@ -1127,7 +1127,7 @@ npm test
 
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 Run:
 

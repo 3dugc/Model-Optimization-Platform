@@ -174,6 +174,28 @@ POST /v1/jobs/{jobId}/complete-upload
 
 这样可以避免源文件还没上传完，worker 就开始处理。
 
+## 当前实现
+
+当前实现对应以下文件：
+
+- `apps/api/src/jobs/job-repository.mjs`：创建 job、查询 job、标记 queued/completed/failed，并写入 `job_events`。
+- `apps/api/src/queue/job-queue.mjs`：BullMQ producer，队列名为 `model-processing-jobs`，消息只包含 `jobId` 和 `pipelineType`。
+- `apps/api/src/index.mjs`：提供 `POST /v1/jobs`、`POST /v1/jobs/{jobId}/complete-upload`、`GET /v1/jobs/{jobId}`、`GET /v1/jobs/{jobId}/result-url`。
+- `apps/worker/src/jobs/job-repository.mjs`：worker 侧从 MySQL 读取完整 job、条件领取、完成或失败任务。
+- `apps/worker/src/queue/worker-queue.mjs`：BullMQ worker consumer。
+- `apps/worker/src/pipelines/model-optimization.mjs`：第一版 deterministic wrapper，写入 `results/{jobId}/optimized.glb` 合约，后续再替换为 COS 下载、调用 3D-Model-Optimizer、COS 上传。
+
+第一版 API 的上传和下载 URL 使用确定性的 `cos://signed-upload/...` 和 `cos://signed-download/...` 占位值。真实 COS 签名客户端尚未接入。
+
+本地验证命令：
+
+```bash
+docker compose -f infra/docker-compose.yml up --build
+npm run smoke:mysql-redis
+```
+
+如果默认 host 端口被占用，可以使用 `API_HOST_PORT`、`REDIS_HOST_PORT`、`MYSQL_HOST_PORT` 覆盖。
+
 ## 运维指标
 
 必须采集：
