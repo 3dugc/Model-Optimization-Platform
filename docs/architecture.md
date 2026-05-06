@@ -19,8 +19,8 @@ Other processing engines may be integrated later. Area-Target-Scanner is reserve
 5. The API marks the job `queued` after upload confirmation and sends a queue message.
 6. A worker claims the queue message only when it has local capacity and marks the job `processing`.
 7. The worker downloads the source object to local temporary storage.
-8. The worker calls 3D-Model-Optimizer with the selected preset or custom options.
-9. The worker uploads the optimized GLB to COS.
+8. The worker routes the job to the local pipeline service selected by `pipelineType`.
+9. The worker uploads the optimized GLB or asset bundle to COS.
 10. The worker marks the job `completed` with result metadata, or `failed` with a structured error.
 
 ## Initial Job States
@@ -36,6 +36,24 @@ Other processing engines may be integrated later. Area-Target-Scanner is reserve
 
 The queue is the load balancer. Add more worker containers to increase throughput. Keep worker concurrency conservative at first because 3D model conversion and texture compression can consume significant CPU, memory, and disk.
 
+## Composite Worker Node Model
+
+Each elastic server should be treated as a composite processing node. A node runs the platform worker agent together with the local processing services it can use.
+
+```text
+Elastic Worker Node
+  - platform worker agent
+  - Area-Target-Scanner processing service
+  - 3D-Model-Optimizer service
+  - local temporary workspace
+```
+
+The worker agent consumes queue jobs, downloads source objects from COS, and invokes the correct local pipeline. For `model-optimization`, it calls local 3D-Model-Optimizer. For `area-target-processing`, it calls local Area-Target-Scanner, and Area-Target-Scanner may call the same local 3D-Model-Optimizer during its own processing pipeline.
+
+This keeps Area-Target-Scanner's dependency on 3D-Model-Optimizer inside the same server or container network, avoids cross-server coupling, and lets each elastic server handle either type of asset when it has capacity.
+
+The node should expose one shared heavy-work capacity budget at first. Start with one active job per node so a long area target job cannot run beside another large model compression job and exhaust memory, disk, or CPU.
+
 ## Busy Worker Handling
 
 All optimization servers may be occupied at the same time. The platform must treat that as a normal condition, not an error.
@@ -43,7 +61,7 @@ All optimization servers may be occupied at the same time. The platform must tre
 - API requests must not wait for an optimizer to become free.
 - Jobs remain `queued` while all workers are busy.
 - The frontend reads queue position, estimated wait, or a simple `queued` status from the API.
-- Each worker should use a small local concurrency limit, starting with `1`.
+- Each composite worker node should use a small local concurrency limit, starting with `1`.
 - Queue messages should use an acknowledgement or lease mechanism so a crashed worker releases the job back to the queue.
 - Autoscaling should use queue depth, oldest queued job age, and worker CPU or memory pressure.
 - If a job waits too long, the API should still report a clear waiting state instead of timing out.
@@ -58,7 +76,7 @@ The job model should not assume every task is a single model-to-GLB optimization
 
 Initial reserved pipeline identifiers:
 
-- `model-optimization`: source model or archive to optimized GLB through 3D-Model-Optimizer.
-- `area-target-processing`: iOS LiDAR scan ZIP to area target asset bundle through Area-Target-Scanner.
+- `model-optimization`: source model or archive to optimized GLB through local 3D-Model-Optimizer.
+- `area-target-processing`: iOS LiDAR scan ZIP to area target asset bundle through local Area-Target-Scanner, which may depend on local 3D-Model-Optimizer.
 
 Area target processing should use the same platform primitives: direct COS upload, durable job state, queue backpressure, worker capacity limits, retries, and COS result storage. Its result artifact is an asset bundle directory or archive rather than only `optimized.glb`.

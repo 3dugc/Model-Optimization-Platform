@@ -18,8 +18,8 @@ API
 Worker
   -> Queue: claim job when capacity is available
   -> COS: download source model
-  -> 3D-Model-Optimizer: optimize model
-  -> COS: upload optimized GLB
+  -> Local pipeline service: 3D-Model-Optimizer or Area-Target-Scanner
+  -> COS: upload optimized GLB or asset bundle
   -> DB: update job result
 Frontend
   -> API: query status and result URL
@@ -46,6 +46,7 @@ This is the initial platform scaffold. The first production milestone should add
 - COS signed upload/download integration
 - optimizer call wrapper
 - queue backpressure when every optimization worker is busy
+- composite worker nodes running worker agent, Area-Target-Scanner, and 3D-Model-Optimizer together
 - retry and dead-letter handling
 - future pipeline routing for Area-Target-Scanner-style asset bundle jobs
 
