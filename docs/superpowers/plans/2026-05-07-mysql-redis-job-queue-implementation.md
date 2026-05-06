@@ -677,7 +677,7 @@ git commit -m "feat: add redis job queue producer"
 - Create: `apps/api/src/jobs/job-routes.mjs`
 - Create: `apps/api/src/jobs/job-routes.test.mjs`
 
-- [ ] **Step 1: Add route behavior tests**
+- [x] **Step 1: Add route behavior tests**
 
 Create `apps/api/src/jobs/job-routes.test.mjs`:
 
@@ -719,7 +719,7 @@ test('buildJobStatusResponse hides internal lock fields', () => {
 });
 ```
 
-- [ ] **Step 2: Implement route helpers**
+- [x] **Step 2: Implement route helpers**
 
 Create `apps/api/src/jobs/job-routes.mjs`:
 
@@ -746,7 +746,7 @@ export function buildJobStatusResponse(job) {
 }
 ```
 
-- [ ] **Step 3: Wire API endpoints**
+- [x] **Step 3: Wire API endpoints**
 
 Modify `apps/api/src/index.mjs` so these routes exist:
 
@@ -777,7 +777,7 @@ const sourceKey = `uploads/${jobId}/source.${extension}`;
 
 Use `repository.markQueued(jobId)` and `jobQueue.enqueueJob({ jobId, pipelineType })` only in `complete-upload`.
 
-- [ ] **Step 4: Run API tests**
+- [x] **Step 4: Run API tests**
 
 Run:
 
@@ -788,7 +788,7 @@ npm test
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
