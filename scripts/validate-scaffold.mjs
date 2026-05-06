@@ -5,6 +5,7 @@ const requiredFiles = [
   '.env.example',
   'package.json',
   'docs/architecture.md',
+  'docs/deployment.md',
   'docs/superpowers/plans/2026-05-07-initial-platform-scaffold.md',
   'apps/api/package.json',
   'apps/api/src/index.mjs',

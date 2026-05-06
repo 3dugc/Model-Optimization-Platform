@@ -37,6 +37,12 @@ infra/       Local orchestration examples
 docs/        Architecture and implementation notes
 ```
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Deployment Guide](docs/deployment.md)
+- [Composite Worker Node Design](docs/superpowers/specs/2026-05-07-composite-worker-node-design.md)
+
 ## Current Status
 
 This is the initial platform scaffold. The first production milestone should add:
